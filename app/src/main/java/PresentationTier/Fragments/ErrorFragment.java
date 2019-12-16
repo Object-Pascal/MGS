@@ -14,7 +14,7 @@ public class ErrorFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         //TODO: change to correct layout
-        return inflater.inflate(R.layout.activity_main, container, false);
+        return inflater.inflate(R.layout.waypoint_fragment, container, false);
     }
 
 }
