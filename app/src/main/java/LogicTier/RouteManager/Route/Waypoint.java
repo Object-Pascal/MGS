@@ -12,6 +12,18 @@ public class Waypoint {
     private double height;
     private ArrayList<String> multimedia;
 
+
+    public Waypoint(boolean hasBeenChecked, boolean isVisitedChecked, int id, String name, String latitude, String longitude, double height, ArrayList<String> multimedia) {
+        this.hasBeenChecked = hasBeenChecked;
+        this.isVisitedChecked = isVisitedChecked;
+        this.id = id;
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.height = height;
+        this.multimedia = multimedia;
+    }
+
     public boolean isHasBeenChecked()
     {
         return hasBeenChecked;
