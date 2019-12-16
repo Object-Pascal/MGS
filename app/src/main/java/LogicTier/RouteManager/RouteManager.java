@@ -1,26 +1,31 @@
 package LogicTier.RouteManager;
 
-import java.util.ArrayList;
+import android.location.Location;
 
+import LogicTier.RouteManager.Route.Route;
 import LogicTier.RouteManager.Route.Waypoint;
 
 public class RouteManager {
-    private ArrayList<Waypoint> waypointsWithinDistance;
+    private Route route;
 
-    public RouteManager() {
-        this.waypointsWithinDistance = new ArrayList<>();
+    public RouteManager(Route route) {
+        this.route = route;
     }
 
-    public boolean CheckIfCloseToWaypoint(int x, int y) {
-        // TODO: Check maken
-        return true;
+    public Waypoint CheckIfCloseToWaypoint(double userLatitude, double userLongitude) {
+        Waypoint closestWaypoint = null;
+        for (Waypoint w : this.route.getRoute()) {
+            float[] checkResult = new float[1];
+            Location.distanceBetween(Double.parseDouble(w.getLatitude()), Double.parseDouble(w.getLongitude()), userLatitude, userLongitude, checkResult);
+
+            if (checkResult[0] < 10) {
+                closestWaypoint = w;
+            }
+        }
+        return closestWaypoint;
     }
 
-    public ArrayList<Waypoint> getWaypointsWithinDistance() {
-        return waypointsWithinDistance;
-    }
-
-    public void setWaypointsWithinDistance(ArrayList<Waypoint> waypointsWithinDistance) {
-        this.waypointsWithinDistance = waypointsWithinDistance;
+    public Route getRoute() {
+        return route;
     }
 }

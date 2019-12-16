@@ -14,12 +14,10 @@ public class GPSManager {
     }
 
     public boolean isGPSEnabled() {
-        boolean gpsEnabled = false;
         if (this.locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)) {
-            gpsEnabled = true;
-            return gpsEnabled;
+            return true;
         }
-        return gpsEnabled;
+        return false;
     }
 
     public void setLocationListener(LocationListener locationListener) {
