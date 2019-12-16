@@ -24,6 +24,16 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public DatabaseManager(Context context) {
         super(context, dbName, null, dbVersion);
+/*        SQLiteDatabase db = getWritableDatabase();
+
+        String drop1 = "DROP TABLE " + dbTableSettings;
+        String drop2 = "DROP TABLE " + dbTableWaypoints;
+
+        db.execSQL(drop1);
+        db.execSQL(drop2);
+
+        db.execSQL(CREATE_TABLE_WAYPOINTS);
+        db.execSQL(CREATE_TABLE_SETTINGS);*/
     }
 
     @Override
@@ -62,11 +72,24 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     public void insertSettingsIntoDB(Settings settings) {
 
-        String insertStatement = "INSERT INTO " + dbTableSettings + " (language) VALUES ('" + settings.getLanguage() + "')";
+        String getStatement = "SELECT * FROM " + dbTableSettings;
 
         SQLiteDatabase db = getWritableDatabase();
-        db.execSQL(insertStatement);
-        db.close();
+        Cursor cursor;
+        cursor = db.rawQuery(getStatement, null);
+
+        if(cursor.getCount() > 0) {
+            String insertStatement = "UPDATE " + dbTableSettings + " SET language = '" + settings.getLanguage() + "' WHERE 1 = 1";
+
+            db.execSQL(insertStatement);
+            db.close();
+        }
+        else {
+            String insertStatement = "INSERT INTO " + dbTableSettings + " (language) VALUES ('" + settings.getLanguage() + "')";
+
+            db.execSQL(insertStatement);
+            db.close();
+        }
 
     }
 
