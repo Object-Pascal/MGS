@@ -1,11 +1,18 @@
 package LogicTier.RouteManager.Route;
 
-import java.io.File;
+import android.content.Context;
 import java.util.ArrayList;
 
+import DataTier.Database.DatabaseManager;
+
 public class RouteReader {
-    public ArrayList<Waypoint> ReadWaypointsFromJson(File Jsonfile) {
-        // TODO: Routes lezen via de IO manager
-        return null;
+    private DatabaseManager databaseManager;
+
+    public RouteReader(Context context) {
+        this.databaseManager = new DatabaseManager(context);
+    }
+
+    public ArrayList<Waypoint> ReadWaypointsFromDatabase() {
+        return this.databaseManager.getWaypointsFromDB();
     }
 }

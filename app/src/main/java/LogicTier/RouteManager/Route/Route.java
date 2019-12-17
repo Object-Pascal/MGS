@@ -9,6 +9,10 @@ public class Route {
         this.route = new ArrayList<>();
     }
 
+    public Route(ArrayList<Waypoint> route){
+        this.route = route;
+    }
+
     public ArrayList<Waypoint> getRoute() {
         return route;
     }

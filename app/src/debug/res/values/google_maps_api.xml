@@ -1,0 +1,12 @@
+<resources>
+    <!--
+    https://console.developers.google.com/flows/enableapi?apiid=maps_android_backend&keyType=CLIENT_SIDE_ANDROID&r=B9:38:8D:68:0C:D0:A9:A9:85:6E:A3:C6:A1:C3:37:D2:33:06:34:6B%3Bcom.example.gaanplaatsstaan
+
+    Package name:
+    B9:38:8D:68:0C:D0:A9:A9:85:6E:A3:C6:A1:C3:37:D2:33:06:34:6B
+
+    SHA-1 certificate fingerprint:
+    B9:38:8D:68:0C:D0:A9:A9:85:6E:A3:C6:A1:C3:37:D2:33:06:34:6B
+    -->
+    <string name="google_maps_key" templateMergeStrategy="preserve" translatable="false">AIzaSyDcBslBaYsEWAu__j6kz5EsOBtbAn4jZes</string>
+</resources>
