@@ -13,6 +13,18 @@ public class Waypoint {
     private ArrayList<String> multimedia;
 
 
+    //Constructor without id <-- Use this one for inserting waypoints in DB
+    public Waypoint(boolean hasBeenChecked, boolean isVisitedChecked, String name, String latitude, String longitude, double height, ArrayList<String> multimedia) {
+        this.hasBeenChecked = hasBeenChecked;
+        this.isVisitedChecked = isVisitedChecked;
+        this.name = name;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.height = height;
+        this.multimedia = multimedia;
+    }
+
+    //Constructor with id <-- Use this to load waypoints from the DB
     public Waypoint(boolean hasBeenChecked, boolean isVisitedChecked, int id, String name, String latitude, String longitude, double height, ArrayList<String> multimedia) {
         this.hasBeenChecked = hasBeenChecked;
         this.isVisitedChecked = isVisitedChecked;

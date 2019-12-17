@@ -5,6 +5,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.graphics.Point;
+import android.util.Log;
 
 import java.util.ArrayList;
 
@@ -47,26 +48,99 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
     }
 
+    /**
+     * Check if a waypoint exists, this method checks on: name and a combination of lat and long
+     * @param waypoint
+     * @return
+     */
+    private boolean doesWaypointExist(Waypoint waypoint) {
+
+        //Check if waypoint exists
+        String getStatement = "SELECT * FROM " + dbTableWaypoints;
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(getStatement, null);
+
+
+
+        if(cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+
+                String name = cursor.getString(cursor.getColumnIndex("name"));
+                String lat = cursor.getString(cursor.getColumnIndex("latitude"));
+                String lon = cursor.getString(cursor.getColumnIndex("longitude"));
+
+                //Check if the name already exists in db
+                if(name.toLowerCase().equals(waypoint.getName().toLowerCase())) {
+                    db.close();
+                    return true;
+                }
+
+                //Check if lat and lon is the same as one in the db
+                if(lat.toLowerCase().equals(waypoint.getLatitude().toLowerCase())) {
+                    if(lon.toLowerCase().equals(waypoint.getLongitude().toLowerCase())) {
+                        db.close();
+                        return true;
+                    }
+                }
+            }
+
+        }
+        db.close();
+        return false;
+
+    }
+
+    private int createWaypointID() {
+
+        String getStatement = "SELECT id FROM " + dbTableWaypoints;
+        ArrayList<Integer> waypointIDs = new ArrayList<>();
+
+        SQLiteDatabase db = getReadableDatabase();
+        Cursor cursor = db.rawQuery(getStatement, null);
+
+        int id;
+        if(cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                waypointIDs.add(cursor.getInt(cursor.getColumnIndex("id")));
+            }
+            id = (waypointIDs.get(waypointIDs.size() - 1)) + 1;
+        }
+        else {
+            id = 1;
+        }
+
+        db.close();
+        return id;
+    }
+
     public void insertWaypointIntoDB(Waypoint waypoint) {
 
-        int hasVisitedAsInteger = 0;
-        int visitedIsCheckedAsInteger = 0;
 
-        if(waypoint.isHasBeenChecked()) {
-            hasVisitedAsInteger = 1;
+        if(doesWaypointExist(waypoint)) {
+            int id = createWaypointID();
+
+            int hasVisitedAsInteger = 0;
+            int visitedIsCheckedAsInteger = 0;
+
+            if(waypoint.isHasBeenChecked()) {
+                hasVisitedAsInteger = 1;
+            }
+            if(waypoint.isVisitedChecked()) {
+                visitedIsCheckedAsInteger = 1;
+            }
+
+            String insertStatement = "INSERT INTO " + dbTableWaypoints + " (hasBeenVisited, visitedIsChecked, id, name, latitude, longitude, height) " +
+                    "VALUES (" + hasVisitedAsInteger + ", " + visitedIsCheckedAsInteger + ", " +
+                    "" + id + ", '" + waypoint.getName() +"', " +
+                    "'" + waypoint.getLatitude() + "', '" + waypoint.getLongitude() +"', '" + waypoint.getHeight() +"')";
+
+            SQLiteDatabase db = getWritableDatabase();
+            db.execSQL(insertStatement);
+            db.close();
         }
-        if(waypoint.isVisitedChecked()) {
-            visitedIsCheckedAsInteger = 1;
+        else {
+            Log.d("GPS", "Waypoint already exists in db!");
         }
-
-        String insertStatement = "INSERT INTO " + dbTableWaypoints + " (hasBeenVisited, visitedIsChecked, id, name, latitude, longitude, height) " +
-                "VALUES (" + hasVisitedAsInteger + ", " + visitedIsCheckedAsInteger + ", " +
-                "" + waypoint.getId() + ", '" + waypoint.getName() +"', " +
-                "'" + waypoint.getLatitude() + "', '" + waypoint.getLongitude() +"', '" + waypoint.getHeight() +"')";
-
-        SQLiteDatabase db = getWritableDatabase();
-        db.execSQL(insertStatement);
-        db.close();
 
     }
 

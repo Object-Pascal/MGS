@@ -18,8 +18,8 @@ public class MainActivity extends AppCompatActivity {
 
         DatabaseManager databaseManager = new DatabaseManager(this);
 
-        //databaseManager.insertWaypointIntoDB(new Waypoint(false, false, 1, "VVV", "51.588762", "4.776913", 0, null));
-        //databaseManager.insertWaypointIntoDB(new Waypoint(false, false, 2, "Grote Kerk Breda", "51.588770", "4.775376", 0, null));
+        /*databaseManager.insertWaypointIntoDB(new Waypoint(false, false, "VVV", "51.588762", "4.776913", 0, null));
+        databaseManager.insertWaypointIntoDB(new Waypoint(false, false, "Grote Kerk Breda", "51.588770", "4.775376", 0, null));*/
 
         Intent mapsIntent = new Intent(this, MapsActivity.class);
         startActivity(mapsIntent);
