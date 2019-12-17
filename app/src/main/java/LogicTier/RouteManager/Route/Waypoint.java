@@ -15,13 +15,8 @@ public class Waypoint {
 
     //Constructor without id <-- Use this one for inserting waypoints in DB
     public Waypoint(boolean hasBeenChecked, boolean isVisitedChecked, String name, String latitude, String longitude, double height, ArrayList<String> multimedia) {
-        this.hasBeenChecked = hasBeenChecked;
-        this.isVisitedChecked = isVisitedChecked;
-        this.name = name;
-        this.latitude = latitude;
-        this.longitude = longitude;
-        this.height = height;
-        this.multimedia = multimedia;
+        //ID == 0
+        this(hasBeenChecked, isVisitedChecked, 0, name, latitude, longitude, height, multimedia);
     }
 
     //Constructor with id <-- Use this to load waypoints from the DB
