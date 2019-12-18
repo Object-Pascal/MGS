@@ -25,7 +25,7 @@ public class Error extends PopUpFragment {
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
-        // Defines the xml file for the fragment
+
         return inflater.inflate(R.layout.popup_fragment, parent, false);
     }
 
