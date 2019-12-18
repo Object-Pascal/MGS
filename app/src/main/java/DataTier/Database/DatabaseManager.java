@@ -21,7 +21,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_WAYPOINTS = "CREATE TABLE " + dbTableWaypoints +
             "(hasBeenVisited Integer, visitedIsChecked Integer, id Integer, name Text, latitude Text, longitude Text, height Text)";
     private static final String CREATE_TABLE_SETTINGS = "CREATE TABLE " + dbTableSettings +
-            "(language Text)";
+            "(language Text, colorBlindMode Integer)";
 
     public DatabaseManager(Context context) {
         super(context, dbName, null, dbVersion);
@@ -148,18 +148,23 @@ public class DatabaseManager extends SQLiteOpenHelper {
 
         String getStatement = "SELECT * FROM " + dbTableSettings;
 
+        int colorBlindModeInteger = 0;
+        if(settings.isColorBlindmode()) {
+            colorBlindModeInteger = 1;
+        }
+
         SQLiteDatabase db = getWritableDatabase();
         Cursor cursor;
         cursor = db.rawQuery(getStatement, null);
 
         if(cursor.getCount() > 0) {
-            String insertStatement = "UPDATE " + dbTableSettings + " SET language = '" + settings.getLanguage() + "' WHERE 1 = 1";
+            String insertStatement = "UPDATE " + dbTableSettings + " SET language = '" + settings.getLanguage() + "', colorBlindMode = " + colorBlindModeInteger +" WHERE 1 = 1";
 
             db.execSQL(insertStatement);
             db.close();
         }
         else {
-            String insertStatement = "INSERT INTO " + dbTableSettings + " (language) VALUES ('" + settings.getLanguage() + "')";
+            String insertStatement = "INSERT INTO " + dbTableSettings + " (language, colorBlindMode) VALUES ('" + settings.getLanguage() + "', " + colorBlindModeInteger +")";
 
             db.execSQL(insertStatement);
             db.close();
@@ -229,9 +234,20 @@ public class DatabaseManager extends SQLiteOpenHelper {
             while(cursor.moveToNext()) {
 
                 String language = cursor.getString(cursor.getColumnIndex("language"));
-                settings = new Settings(language);
+                int colorBlindModeInt = cursor.getInt(cursor.getColumnIndex("colorBlindMode"));
+
+                boolean colorBlindMode = false;
+                if(colorBlindModeInt >= 1) {
+                    colorBlindMode = true;
+                }
+
+                settings = new Settings(language, colorBlindMode);
                 break;
             }
+        }
+        else {
+            insertSettingsIntoDB(new Settings("NL", false));
+            return new Settings("NL", false);
         }
 
         return settings;

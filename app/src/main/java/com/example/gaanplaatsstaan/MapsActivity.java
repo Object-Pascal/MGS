@@ -1,5 +1,7 @@
 package com.example.gaanplaatsstaan;
 
+import android.content.Intent;
+import android.provider.ContactsContract;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -11,17 +13,22 @@ import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.MapStyleOptions;
 import com.google.android.gms.maps.model.MarkerOptions;
 
+import DataTier.Database.DatabaseManager;
 import LogicTier.RouteManager.Route.Route;
 import LogicTier.RouteManager.Route.RouteReader;
 import LogicTier.RouteManager.Route.Waypoint;
 import PresentationTier.Fragments.LegendaFragment;
+import PresentationTier.Fragments.Setting.Settings;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
 
+    private DatabaseManager databaseManager;
+    private Settings settings;
     private RouteReader routeReader;
     private Route initialRoute;
     private boolean legendaVisible;
@@ -34,6 +41,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         initDefaultValues();
         readRouteFromDatabase();
+
+        databaseManager = new DatabaseManager(this);
+        this.settings = databaseManager.getSettingsFromDB();
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -78,7 +88,14 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
 
 
-
+        ImageView imgSettings = findViewById(R.id.imgSettings);
+        imgSettings.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getApplicationContext(), SettingsActivity.class);
+                startActivity(intent);
+            }
+        });
     }
 
     private void initDefaultValues() {
@@ -94,6 +111,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     @Override
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
+
+
+        if(!this.settings.isColorBlindmode()) {
+            mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+        }
+        else {
+            googleMap.setMapStyle(new MapStyleOptions(getResources().getString(R.string.style_json)));
+
+        }
+
 
         for (Waypoint w : this.initialRoute.getRoute()) {
             LatLng waypointMarker = new LatLng(Double.parseDouble(w.getLatitude()), Double.parseDouble(w.getLongitude()));

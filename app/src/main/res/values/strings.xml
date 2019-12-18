@@ -9,4 +9,15 @@
     <string name="txtSettingsExplain">Als er op dit icoon wordt gedrukt wordt de instellingen pagina geopend.</string>
     <string name="txtWaypointExplain">Dit is het icoon voor de waypoint, deze worden op de kaart aangegeven. Druk erop voor meer informatie.</string>
     <string name="txtMapYouExplain">Dit is het icoon om aan te geven waar u zich op de kaart bevindt.</string>
+
+    <string name="txtExplainationApp">Als de kaart geopend staat staan rechtsboven een aantal iconen. Er staat rechtsboven een gekleurd icoontje. In het geval van een rood icoontje is er sprake van een aantal problemen met de app. Bij een bauw icoontje werkt alles naar behoren. Het icoontje daaronder geeft de legenda weer. Tot slot kun je via het "map" icoontje de weergaveoptie van de map aanpassen. Dit kan satellietweergave of standaard zijn.
+
+        Door op een marker te klikken kan meer informatie over een punt weergegeven worden. Eventueel is er daarbij tekst en een plaatje zichtbaar.
+
+        Door vanaf de onderste bezel van de telefoon omhoog te swipen kunnen de routes geopend en aangeklikt worden.</string>
+    <string name="txtColorBlind">Kleurenblindheid</string>
+    <string name="explanation">Uitleg</string>
+    <string name="save">Opslaan</string>
+
+
 </resources>
