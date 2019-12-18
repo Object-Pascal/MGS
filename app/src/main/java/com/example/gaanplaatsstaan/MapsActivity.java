@@ -1,22 +1,16 @@
 package com.example.gaanplaatsstaan;
 
-import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
-import android.widget.Toast;
 
-import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
 import com.google.android.gms.maps.model.LatLng;
-import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 
 import LogicTier.RouteManager.Route.Route;
@@ -31,6 +25,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private RouteReader routeReader;
     private Route initialRoute;
     private boolean legendaVisible;
+    private boolean mapSwitch;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -43,7 +38,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
 
-
         //Legende inladen
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
         ft.replace(R.id.legendFrame, new LegendaFragment());
@@ -54,8 +48,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         frameLayout.setVisibility(View.INVISIBLE);
 
         //Onclick aanmaken.
-        ImageView imageView = findViewById(R.id.imgLegenda);
-        imageView.setOnClickListener(new View.OnClickListener() {
+        ImageView imgLegend = findViewById(R.id.imgLegenda);
+        imgLegend.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FrameLayout frameLayout = findViewById(R.id.legendFrame);
@@ -68,9 +62,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 legendaVisible = !legendaVisible;
             }
         });
+
+        ImageView imgMap = findViewById(R.id.imgMap);
+        imgMap.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if(mapSwitch) {
+                    mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
+                }
+                else {
+                    mMap.setMapType(GoogleMap.MAP_TYPE_SATELLITE);
+                }
+                mapSwitch = !mapSwitch;
+            }
+        });
+
     }
 
     private void initDefaultValues() {
+        this.mapSwitch = false;
         this.legendaVisible = false;
         this.routeReader = new RouteReader(this);
     }
