@@ -116,7 +116,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
     public void insertWaypointIntoDB(Waypoint waypoint) {
 
 
-        if(doesWaypointExist(waypoint)) {
+        if(!doesWaypointExist(waypoint)) {
             int id = createWaypointID();
 
             int hasVisitedAsInteger = 0;

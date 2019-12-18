@@ -93,13 +93,12 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void readRouteFromDatabase() {
-        ArrayList<Waypoint> wp = new ArrayList<>();
-        wp.add(new Waypoint(false, false, "VVV", "51.588762", "4.776913", 0, null));
-        wp.add(new Waypoint(false, false, "Grote Kerk Breda", "51.588770", "4.775376", 0, null));
-        wp.add(new Waypoint(false, false, "Kippie Breda", "51.588271", "4.775229", 0, null));
+        DatabaseManager databaseManager = new DatabaseManager(this);
+        databaseManager.insertWaypointIntoDB(new Waypoint(false, false, "VVV", "51.588762", "4.776913", 0, null));
+        databaseManager.insertWaypointIntoDB(new Waypoint(false, false, "Grote Kerk Breda", "51.588770", "4.775376", 0, null));
+        databaseManager.insertWaypointIntoDB(new Waypoint(false, false, "Kippie Breda", "51.588271", "4.775229", 0, null));
 
-        this.initialRoute = new Route(wp);
-        //this.initialRoute = new Route(routeReader.ReadWaypointsFromDatabase());
+        this.initialRoute = new Route(routeReader.ReadWaypointsFromDatabase());
     }
 
     private void readSettingsFromDatabase() {
