@@ -55,8 +55,6 @@ import PresentationTier.Fragments.WaypointInfoFragment;
 import PresentationTier.Fragments.WaypointPopup;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, OnRouteCallback {
-    public static final int MY_PERMISSIONS_REQUEST_LOCATION = 99;
-
     private GoogleMap mMap;
 
     private GPSManager gpsManager;
@@ -78,7 +76,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
 
-        checkLocationPermission();
         initDefaultValues();
         loadLegend();
         readRouteFromDatabase();
@@ -231,35 +228,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             }
         }, this);
 
+        this.gpsManager.checkLocationPermission(this);
+
         if (ContextCompat.checkSelfPermission(this,
                 Manifest.permission.ACCESS_FINE_LOCATION)
                 == PackageManager.PERMISSION_GRANTED) {
             this.gpsManager.buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
-        }
-    }
-
-    public boolean checkLocationPermission() {
-        if (ContextCompat.checkSelfPermission(this,
-                Manifest.permission.ACCESS_FINE_LOCATION)
-                != PackageManager.PERMISSION_GRANTED) {
-
-            if (ActivityCompat.shouldShowRequestPermissionRationale(this,
-                    Manifest.permission.ACCESS_FINE_LOCATION)) {
-
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
-
-
-            } else {
-                ActivityCompat.requestPermissions(this,
-                        new String[]{Manifest.permission.ACCESS_FINE_LOCATION},
-                        MY_PERMISSIONS_REQUEST_LOCATION);
-            }
-            return false;
-        } else {
-            return true;
         }
     }
 }
