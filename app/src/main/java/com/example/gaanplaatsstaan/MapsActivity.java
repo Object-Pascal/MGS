@@ -83,6 +83,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        //setErrorImg(true);
     }
 
     private void initDefaultValues() {
@@ -202,6 +203,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void OnRouteLoaded(PolylineOptions options, LatLngBounds bounds, int padding) {
         routeLines.add(mMap.addPolyline(options));
         mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+    }
+
+    public void setErrorImg(boolean hasError) {
+        ImageView errorImg = (ImageView) findViewById(R.id.imgWorking);
+        errorImg.setImageResource(hasError ? R.drawable.circle_bad : R.drawable.circle_good);
     }
 
     private void initializeUserConnection() {

@@ -3,7 +3,7 @@
 
     <string name="error">FOUTMELDING!!!!!!!!!!!!!!!</string>
     <string name="popUpFragment_Information">U bent 10 meter van de waypoint vandaan.</string>
-    <string name="title_activity_maps">Map</string>
+    <string name="title_activity_maps" translatable="false">Map</string>
     <string name="txtCircleExplan">Deze cirkel geeft aan of de app nog reageert.</string>
     <string name="txtMapExplain">Door op dit icoon te drukken wordt het uiterlijk van de kaart veranderd.</string>
     <string name="txtSettingsExplain">Als er op dit icoon wordt gedrukt wordt de instellingen pagina geopend.</string>
