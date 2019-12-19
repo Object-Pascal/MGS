@@ -32,6 +32,7 @@ import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
 import java.util.ArrayList;
+import java.util.Objects;
 
 import DataTier.Database.DatabaseManager;
 import LogicTier.RouteManager.GpsManager.GPSManager;
@@ -46,6 +47,7 @@ import PresentationTier.Fragments.Setting.Settings;
 import PresentationTier.Fragments.WaypointPopup;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, OnRouteCallback {
+    private static final String TAG = "MapsActivity";
     private GoogleMap mMap;
 
     private GPSManager gpsManager;
@@ -54,7 +56,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private ArrayList<Polyline> routeLines;
     private RouteManager routeManager;
-
+    private boolean isPaused = false;
     private DatabaseManager databaseManager;
     private Settings settings;
     private RouteReader routeReader;
@@ -135,6 +137,25 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                         bottomButton.setVisibility(View.VISIBLE);
                     }
                 });
+                routeMenu();
+            }
+        });
+    }
+
+    private void routeList() {
+        
+    }
+
+    private void routeMenu() {
+        Log.i(TAG, "routeMenu: Clicked");
+        final ImageView playPause = (ImageView)(findViewById(R.id.img_pauseplay));
+        playPause.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                playPause.setImageResource(isPaused ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
+                isPaused=!isPaused;
             }
         });
     }
