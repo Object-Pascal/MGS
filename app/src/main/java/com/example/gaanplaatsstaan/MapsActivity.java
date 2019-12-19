@@ -50,6 +50,7 @@ import LogicTier.RouteManager.Route.RouteReader;
 import LogicTier.RouteManager.Route.Waypoint;
 import LogicTier.RouteManager.RouteManager;
 import PresentationTier.Fragments.LegendaFragment;
+import PresentationTier.Fragments.RoutesFragment;
 import PresentationTier.Fragments.Setting.Settings;
 import PresentationTier.Fragments.WaypointInfoFragment;
 import PresentationTier.Fragments.WaypointPopup;
@@ -69,7 +70,9 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private RouteReader routeReader;
     private Route initialRoute;
     private boolean legendaVisible;
+    private boolean routesVisable;
     private boolean mapSwitch;
+    private SupportMapFragment mapFragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -78,10 +81,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         initDefaultValues();
         loadLegend();
+        loadRoutes();
         readRouteFromDatabase();
         readSettingsFromDatabase();
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         //setErrorImg(true);
     }
@@ -105,6 +109,43 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void readSettingsFromDatabase() {
         databaseManager = new DatabaseManager(this);
         this.settings = databaseManager.getSettingsFromDB();
+    }
+
+    private void loadRoutes() {
+        //Routes inladen
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        ft.replace(R.id.routeFrame, new RoutesFragment());
+        ft.commit();
+
+        //Onzichtbaar maken
+        FrameLayout frameLayout = findViewById(R.id.routeFrame);
+        frameLayout.setVisibility(View.INVISIBLE);
+
+        //Onclick
+        ImageView routeButton = (ImageView) findViewById(R.id.imgRoutes);
+        routeButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                final FrameLayout frameLayout = findViewById(R.id.routeFrame);
+                frameLayout.setVisibility(routesVisable ? View.INVISIBLE : View.VISIBLE);
+                routesVisable = !routesVisable;
+                final ImageView bottomButton = (ImageView) findViewById(R.id.imgRoutes);
+                bottomButton.setVisibility(View.INVISIBLE);
+                ImageView topButton = (ImageView) findViewById(R.id.imgRoutes2);
+                topButton.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        frameLayout.setVisibility(routesVisable ? View.INVISIBLE : View.VISIBLE);
+                        routesVisable = !routesVisable;
+                        bottomButton.setVisibility(View.VISIBLE);
+                    }
+                });
+            }
+        });
     }
 
     private void loadLegend() {
