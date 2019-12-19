@@ -7,8 +7,6 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
-import android.provider.ContactsContract;
-import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -18,12 +16,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -37,9 +31,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import DataTier.Database.DatabaseManager;
@@ -52,7 +43,6 @@ import LogicTier.RouteManager.RouteManager;
 import PresentationTier.Fragments.LegendaFragment;
 import PresentationTier.Fragments.RoutesFragment;
 import PresentationTier.Fragments.Setting.Settings;
-import PresentationTier.Fragments.WaypointInfoFragment;
 import PresentationTier.Fragments.WaypointPopup;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, OnRouteCallback {
@@ -114,7 +104,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private void loadRoutes() {
         //Routes inladen
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
-        ft.replace(R.id.routeFrame, new RoutesFragment());
+        RoutesFragment routesFragment = new RoutesFragment();
+        ft.replace(R.id.routeFrame, routesFragment);
         ft.commit();
 
         //Onzichtbaar maken
@@ -133,7 +124,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 routesVisable = !routesVisable;
                 final ImageView bottomButton = (ImageView) findViewById(R.id.imgRoutes);
                 bottomButton.setVisibility(View.INVISIBLE);
-                ImageView topButton = (ImageView) findViewById(R.id.imgRoutes2);
+                ImageView topButton = (ImageView) findViewById(R.id.img_pullup);
                 topButton.setOnClickListener(new View.OnClickListener()
                 {
                     @Override
