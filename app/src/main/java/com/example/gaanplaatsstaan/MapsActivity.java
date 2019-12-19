@@ -18,12 +18,8 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.location.FusedLocationProviderClient;
 import com.google.android.gms.location.LocationCallback;
-import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
@@ -37,9 +33,6 @@ import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.maps.model.Polyline;
 import com.google.android.gms.maps.model.PolylineOptions;
 
-import org.jetbrains.annotations.NotNull;
-
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 import DataTier.Database.DatabaseManager;
@@ -51,7 +44,6 @@ import LogicTier.RouteManager.Route.Waypoint;
 import LogicTier.RouteManager.RouteManager;
 import PresentationTier.Fragments.LegendaFragment;
 import PresentationTier.Fragments.Setting.Settings;
-import PresentationTier.Fragments.WaypointInfoFragment;
 import PresentationTier.Fragments.WaypointPopup;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, OnRouteCallback {
@@ -93,13 +85,18 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void readRouteFromDatabase() {
-        ArrayList<Waypoint> wp = new ArrayList<>();
-        wp.add(new Waypoint(false, false, "VVV", "51.588762", "4.776913", 0, null));
-        wp.add(new Waypoint(false, false, "Grote Kerk Breda", "51.588770", "4.775376", 0, null));
-        wp.add(new Waypoint(false, false, "Kippie Breda", "51.588271", "4.775229", 0, null));
+        // De database ondervindt problemen dus de waypoints worden hardcoded toegevoegd
+        // this.initialRoute = new Route(routeReader.ReadWaypointsFromDatabase());
 
+        ArrayList<Waypoint> wp = new ArrayList<Waypoint>();
+        wp.add(new Waypoint(false, false, "VVV", "51.588762", "4.776913", 0, null));
+        wp.add(new Waypoint(false, false, "De Bruine Pij", "51.588791", "4.775477", 0, null));
+        wp.add(new Waypoint(false, false, "Corenmaet", "51.589308", "4.774484", 0, null));
+        wp.add(new Waypoint(false, false, "O'Mearas Irish Pub", "51.589448", "4.775846", 0, null));
+        wp.add(new Waypoint(false, false, "Kasteel van Breda", "51.590504", "4.776221", 0, null));
+        wp.add(new Waypoint(false, false, "Stadspark Valkenberg", "51.590613", "4.777537", 0, null));
+        wp.add(new Waypoint(false, false, "Café Publieke Werken", "51.588973", "4.778062", 0, null));
         this.initialRoute = new Route(wp);
-        //this.initialRoute = new Route(routeReader.ReadWaypointsFromDatabase());
     }
 
     private void readSettingsFromDatabase() {
