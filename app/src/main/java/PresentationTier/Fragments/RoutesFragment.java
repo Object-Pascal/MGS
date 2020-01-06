@@ -23,17 +23,4 @@ public class RoutesFragment extends Fragment
         this.inflater = inflater;
         return inflater.inflate(R.layout.routes_fragment, container, false);
     }
-
-    private void routeMenu() {
-        final ImageView playPause = (ImageView) Objects.requireNonNull(getView()).findViewById(R.id.img_pauseplay);
-         playPause.setOnClickListener(new View.OnClickListener()
-        {
-            @Override
-            public void onClick(View v)
-            {
-                playPause.setImageResource(isPaused ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
-                isPaused=!isPaused;
-            }
-        });
-    }
 }

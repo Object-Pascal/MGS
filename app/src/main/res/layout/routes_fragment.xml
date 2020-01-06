@@ -8,18 +8,17 @@
     android:focusable="true">
 
     <ListView
-        android:id="@+id/list"
+        android:id="@+id/routes_list"
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         android:background="#595757"
         app:layout_constraintBottom_toTopOf="@+id/img_background"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/img_pullup"
         app:layout_constraintVertical_bias="0.0">
 
     </ListView>
@@ -39,8 +38,8 @@
         android:layout_width="0dp"
         android:layout_height="50dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/list"
-        app:layout_constraintStart_toStartOf="@+id/list"
+        app:layout_constraintEnd_toEndOf="@+id/routes_list"
+        app:layout_constraintStart_toStartOf="@+id/routes_list"
         android:src="@android:color/darker_gray" />
 
     <ImageView
@@ -48,9 +47,9 @@
         android:layout_width="32dp"
         android:layout_height="32dp"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/list"
+        app:layout_constraintEnd_toEndOf="@+id/routes_list"
         app:layout_constraintStart_toStartOf="@+id/img_background"
-        app:layout_constraintTop_toBottomOf="@+id/list"
+        app:layout_constraintTop_toBottomOf="@+id/routes_list"
         android:src="@android:drawable/ic_media_pause" />
 
     <ImageView
@@ -60,7 +59,7 @@
         android:layout_marginStart="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="@+id/img_background"
-        app:layout_constraintTop_toBottomOf="@+id/list"
+        app:layout_constraintTop_toBottomOf="@+id/routes_list"
         android:src="@android:drawable/ic_popup_sync" />
 
     <ImageView
@@ -70,7 +69,7 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/img_background"
-        app:layout_constraintTop_toBottomOf="@+id/list"
+        app:layout_constraintTop_toBottomOf="@+id/routes_list"
         android:src="@android:drawable/checkbox_off_background" />
 
 </android.support.constraint.ConstraintLayout>
