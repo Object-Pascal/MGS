@@ -72,7 +72,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     private Settings settings;
     private RouteReader routeReader;
     private Route initialRoute;
-    private Route exampleRoute2;
     private boolean legendaVisible;
     private boolean routesVisable;
     private boolean mapSwitch;
@@ -96,9 +95,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         readRouteFromDatabase();
         readSettingsFromDatabase();
 
-        routes.add(initialRoute);
-        routes.add(exampleRoute2);
-
         mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
         //setErrorImg(true);
@@ -112,38 +108,15 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void readRouteFromDatabase() {
-        // De database ondervindt problemen dus de waypoints worden hardcoded toegevoegd
-        // this.initialRoute = new Route(routeReader.ReadWaypointsFromDatabase());
 
         RouteHelper routeHelper = new RouteHelper();
-        Route route = routeHelper.getRoute(this, "Route1");
-        this.initialRoute = route;
 
+        routes = routeHelper.getAllRoutes(this);
+        this.initialRoute = routeHelper.getInitialRoute(this);
 
-        //ROUTE 2
-        /*DatabaseManager databaseManager = new DatabaseManager(this);
-        databaseManager.insertWaypointIntoDB(new Waypoint(false, false, "VVV", "51.588762", "4.776913", 0, null));
-        databaseManager.insertWaypointIntoDB(new Waypoint(false, false, "Grote Kerk Breda", "51.588770", "4.775376", 0, null));
-        databaseManager.insertWaypointIntoDB(new Waypoint(false, false, "Kippie Breda", "51.588271", "4.775229", 0, null));
-
-        Waypoint vvv = new Waypoint(false, false, "VVV", "51.588762", "4.776913", 0, null);
-        Waypoint avans = new Waypoint(false, false, "Avans Lovensdijkstraat", "51.585665", "4.792003",0, null);
-        Waypoint universityOfAppliedSciences = new Waypoint(false, false, "B U O A S", "51.590784", "4.795631", 0 , null);
-        Waypoint hogeSchoollaan = new Waypoint(false, false, "Avans Hogeschoollaan", "51.584095", "4.797019", 0, null);
-
-        ArrayList<Waypoint> waypoints = new ArrayList<>();
-        waypoints.add(vvv);
-        waypoints.add(avans);
-        waypoints.add(universityOfAppliedSciences);
-        waypoints.add(hogeSchoollaan);
-
-        exampleRoute2 = new Route(waypoints);
-        exampleRoute2.title = "Scholen tour";
-        exampleRoute2.image = getDrawable(R.drawable.avans);
-
-        this.initialRoute = new Route(routeReader.ReadWaypointsFromDatabase());
-        this.initialRoute.title = "VVV route";
-        this.initialRoute.image = getDrawable(R.drawable.bredastad);*/
+        if(initialRoute == null) {
+            initialRoute = routes.get(0);
+        }
     }
 
     private void readSettingsFromDatabase() {
@@ -233,7 +206,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 appIcon.setImageDrawable(routes.get(position).image);
                 ImageView background = (ImageView) convertView.findViewById(R.id.part_route_iv_background);
                 int number = (int)(Math.random()*3);
-                background.setImageDrawable(getDrawable(number==0 ? android.R.color.holo_orange_light : number==1 ?  android.R.color.holo_green_dark : number==2 ? android.R.color.holo_red_dark : number==3 ? android.R.color.holo_purple : android.R.color.holo_green_light));
+                //background.setImageDrawable(getDrawable(number==0 ? android.R.color.holo_orange_light : number==1 ?  android.R.color.holo_green_dark : number==2 ? android.R.color.holo_red_dark : number==3 ? android.R.color.holo_purple : android.R.color.holo_green_light));
                 TextView title = (TextView) convertView.findViewById(R.id.part_route_tv_title);
                 title.setText(routes.get(position).title);
                 return convertView;
@@ -255,7 +228,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                 appIcon.setImageDrawable(getDrawable(number==0 ? R.drawable.bredastad : number==1 ?  android.R.color.holo_green_dark : number==2 ? R.drawable.avans : number==3 ? android.R.color.holo_purple : R.drawable.circle_good));
                 ImageView background = (ImageView) convertView.findViewById(R.id.part_waypoint_iv_background4);
                 number = (int)(Math.random()*3);
-                background.setImageDrawable(getDrawable(number==0 ? android.R.color.holo_orange_light : number==1 ?  android.R.color.holo_green_dark : number==2 ? android.R.color.holo_red_dark : number==3 ? android.R.color.holo_purple : android.R.color.holo_green_light));
+               // background.setImageDrawable(getDrawable(number==0 ? android.R.color.holo_orange_light : number==1 ?  android.R.color.holo_green_dark : number==2 ? android.R.color.holo_red_dark : number==3 ? android.R.color.holo_purple : android.R.color.holo_green_light));
                 TextView title = (TextView) convertView.findViewById(R.id.part_waypoint_tv_title4);
                 title.setText(waypoints.get(position).getName());
                 return convertView;
@@ -264,12 +237,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         routesListView.setAdapter(adapterForWaypoints);
     }
 
+
     private void addClickListenerForRoutes() {
         routesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 // fill with waypoints instead of routes.
-                loadWaypointListView(exampleRoute2.getRoute());
+                initialRoute = routes.get(i);
+                /*loadWaypointListView(routes.get(i).getRoute());*/
+
+                RouteHelper routeHelper = new RouteHelper();
+                routeHelper.saveInitialRoute(getApplicationContext(), initialRoute);
+
+                finish();
+                startActivity(getIntent());
             }
         });
     }

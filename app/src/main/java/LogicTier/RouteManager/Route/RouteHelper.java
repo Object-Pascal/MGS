@@ -22,8 +22,48 @@ import java.io.InputStreamReader;
 import java.io.OutputStreamWriter;
 import java.util.ArrayList;
 
-public class RouteHelper
-{
+public class RouteHelper {
+
+    public Route getInitialRoute(Context contexe) {
+
+       return getRoute(contexe, "ROUTE-ON-LOAD");
+
+    }
+
+
+    public void saveInitialRoute(Context context, Route route) {
+
+        route.title = "ROUTE-ON-LOAD";
+
+        Gson gson = new Gson();
+        String json = gson.toJson(route);
+
+        writeFileOnInternalStorage(context, route.title, json);
+
+    }
+
+
+    public ArrayList<Route> getAllRoutes(Context context) {
+
+        ArrayList<String> routeNames = getAllRouteNames(context);
+        ArrayList<Route> routes = new ArrayList<>();
+
+
+        for(int i = 0; i < routeNames.size(); i++) {
+
+            Route route = getRoute(context, routeNames.get(i));
+            if(route == null) {
+                continue;
+            }
+
+            routes.add(route);
+
+        }
+
+        return routes;
+
+    }
+
     public ArrayList<String> getAllRouteNames(Context context) {
 
         String allRoutes = readFileFromInternalStorage(context, "routes");
@@ -58,6 +98,10 @@ public class RouteHelper
     }
 
     public Route getRoute(Context context, String routeName) {
+
+        if(routeName.isEmpty()) {
+            return null;
+        }
 
          String stringRoute = readFileFromInternalStorage(context, routeName);
 
