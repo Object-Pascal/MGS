@@ -1,5 +1,10 @@
 package LogicTier.RouteManager.Route;
 
+import android.util.Log;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -14,6 +19,28 @@ public class Waypoint implements Serializable {
     private double height;
     private ArrayList<String> multimedia;
 
+    public Waypoint(JSONObject jsonObject) {
+
+        try {
+            this.hasBeenChecked = jsonObject.getBoolean("hasBeenChecked");
+            this.isVisitedChecked = jsonObject.getBoolean("isVisitedChecked");
+            this.id = jsonObject.getInt("id");
+            this.name = jsonObject.getString("name");
+            this.description = jsonObject.getString("description");
+            this.latitude = jsonObject.getString("latitude");
+            this.longitude = jsonObject.getString("longitude");
+            this.height = jsonObject.getDouble("height");
+            this.multimedia = new ArrayList<>();
+
+            for(int i = 0; i < jsonObject.getJSONArray("multimedia").length(); i++) {
+                multimedia.add(jsonObject.getJSONArray("multimedia").getString(i));
+            }
+        }
+        catch (JSONException ex) {
+            Log.e("JSonError, waypoint", ex.getMessage());
+        }
+
+    }
 
     //Constructor without id <-- Use this one for inserting waypoints in DB
     public Waypoint(boolean hasBeenChecked, boolean isVisitedChecked, String name, String description, String latitude, String longitude, double height, ArrayList<String> multimedia) {

@@ -31,6 +31,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.CircleOptions;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.LatLngBounds;
@@ -114,13 +115,27 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // this.initialRoute = new Route(routeReader.ReadWaypointsFromDatabase());
 
         ArrayList<Waypoint> wp = new ArrayList<Waypoint>();
-        wp.add(new Waypoint(false, false, "VVV", "", "51.588762", "4.776913", 0, null));
-        wp.add(new Waypoint(false, false, "De Bruine Pij", "", "51.588791", "4.775477", 0, null));
-        wp.add(new Waypoint(false, false, "Corenmaet", "", "51.589308", "4.774484", 0, null));
-        wp.add(new Waypoint(false, false, "O'Mearas Irish Pub", "", "51.589448", "4.775846", 0, null));
-        wp.add(new Waypoint(false, false, "Kasteel van Breda", "", "51.590504", "4.776221", 0, null));
-        wp.add(new Waypoint(false, false, "Stadspark Valkenberg", "", "51.590613", "4.777537", 0, null));
-        wp.add(new Waypoint(false, false, "Café Publieke Werken", "", "51.588973", "4.778062", 0, null));
+        ArrayList<String> images = new ArrayList<>();
+        images.add("https://vvvbreda.nl/content/uploads/2019/03/IMG_20190328_121002.jpg");
+        wp.add(new Waypoint(false, false, "VVV", "", "51.588762", "4.776913", 0, images));
+        images = new ArrayList<>();
+        images.add("https://media-cdn.tripadvisor.com/media/photo-s/15/a4/74/91/buiten-kant.jpg");
+        wp.add(new Waypoint(false, false, "De Bruine Pij", "", "51.588791", "4.775477", 0, images));
+        images = new ArrayList<>();
+        images.add("https://corenmaet.nl/wp-content/media/buiten.jpg");
+        wp.add(new Waypoint(false, false, "Corenmaet", "", "51.589308", "4.774484", 0, images));
+        images = new ArrayList<>();
+        images.add("https://indebuurt.nl/breda/wp-content/uploads/2018/03/omaeras-e1520954240271.jpg");
+        wp.add(new Waypoint(false, false, "O'Mearas Irish Pub", "", "51.589448", "4.775846", 0, images));
+        images = new ArrayList<>();
+        images.add("http://johnooms.nl/wp-content/uploads/2017/06/Kasteel-van-Breda1.jpg");
+        wp.add(new Waypoint(false, false, "Kasteel van Breda", "", "51.590504", "4.776221", 0, images));
+        images = new ArrayList<>();
+        images.add("https://vvvbreda.nl/content/uploads/2018/08/Valkenbergpark-Breda-1-origineel-foto-Mari%C3%ABlle-Houben-1-e1563801409597-1120x604.jpg");
+        wp.add(new Waypoint(false, false, "Stadspark Valkenberg", "", "51.590613", "4.777537", 0, images));
+        images = new ArrayList<>();
+        images.add("https://indebuurt.nl/breda/wp-content/uploads/2017/08/publieke-werken-st-annastraat-breda-2.jpg");
+        wp.add(new Waypoint(false, false, "Café Publieke Werken", "", "51.588973", "4.778062", 0, images));
         this.initialRoute = new Route(wp);
 
 
@@ -351,7 +366,20 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
             LatLng waypointMarker = new LatLng(Double.parseDouble(currWaypoint.getLatitude()), Double.parseDouble(currWaypoint.getLongitude()));
 
-            googleMap.addMarker(new MarkerOptions().position(waypointMarker).title(currWaypoint.getName())).setTag(currWaypoint);
+            if(settings.isColorBlindmode()) {
+                googleMap.addMarker(new MarkerOptions()
+                        .position(waypointMarker)
+                        .title(currWaypoint.getName())
+                        .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_ORANGE)))
+                        .setTag(currWaypoint);
+            }
+            else {
+                googleMap.addMarker(new MarkerOptions()
+                        .position(waypointMarker)
+                        .title(currWaypoint.getName()))
+                        .setTag(currWaypoint);
+            }
+
             googleMap.addCircle(new CircleOptions().center(waypointMarker).radius(10).strokeColor(Color.RED).strokeWidth(2.0f));
 
             if (i + 1 != this.initialRoute.getRoute().size()) {

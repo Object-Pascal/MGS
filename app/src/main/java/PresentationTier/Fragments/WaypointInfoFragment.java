@@ -8,9 +8,11 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.gaanplaatsstaan.R;
+import com.squareup.picasso.Picasso;
 
 import LogicTier.RouteManager.Route.Waypoint;
 
@@ -39,6 +41,7 @@ public class WaypointInfoFragment extends Fragment
 
         TextView textTitle = view.findViewById(R.id.lblWaypointTitle);
         TextView textExplain = view.findViewById(R.id.lblWaypointDescription);
+        ImageView imageView = view.findViewById(R.id.imgContent);
 
         Button btnBack = view.findViewById(R.id.btnBack);
         final Fragment fragment = this;
@@ -52,5 +55,9 @@ public class WaypointInfoFragment extends Fragment
 
         textTitle.setText(waypoint.getName());
         textExplain.setText(waypoint.getDescription());
+
+        Picasso.get()
+                .load(waypoint.getMultimedia().get(0))
+                .into(imageView);
     }
 }

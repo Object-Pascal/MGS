@@ -6,13 +6,13 @@ import java.util.ArrayList;
 import DataTier.Database.DatabaseManager;
 
 public class RouteReader {
-    private DatabaseManager databaseManager;
+    private RouteHelper routeHelper;
 
     public RouteReader(Context context) {
-        this.databaseManager = new DatabaseManager(context);
+        this.routeHelper = new RouteHelper();
     }
 
-    public ArrayList<Waypoint> ReadWaypointsFromDatabase() {
-        return this.databaseManager.getWaypointsFromDB();
+    public Route ReadRouteFromJson(Context c, String routeName) {
+        return this.routeHelper.getRoute(c, routeName);
     }
 }
