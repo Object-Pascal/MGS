@@ -1,12 +1,14 @@
 package LogicTier.RouteManager.Route;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
-public class Waypoint {
+public class Waypoint implements Serializable {
     private boolean hasBeenChecked;
     private boolean isVisitedChecked;
     private int id;
     private String name;
+    private String description;
     private String latitude;
     private String longitude;
     private double height;
@@ -14,17 +16,18 @@ public class Waypoint {
 
 
     //Constructor without id <-- Use this one for inserting waypoints in DB
-    public Waypoint(boolean hasBeenChecked, boolean isVisitedChecked, String name, String latitude, String longitude, double height, ArrayList<String> multimedia) {
+    public Waypoint(boolean hasBeenChecked, boolean isVisitedChecked, String name, String description, String latitude, String longitude, double height, ArrayList<String> multimedia) {
         //ID == 0
-        this(hasBeenChecked, isVisitedChecked, 0, name, latitude, longitude, height, multimedia);
+        this(hasBeenChecked, isVisitedChecked, 0, name, description, latitude, longitude, height, multimedia);
     }
 
     //Constructor with id <-- Use this to load waypoints from the DB
-    public Waypoint(boolean hasBeenChecked, boolean isVisitedChecked, int id, String name, String latitude, String longitude, double height, ArrayList<String> multimedia) {
+    public Waypoint(boolean hasBeenChecked, boolean isVisitedChecked, int id, String name, String description, String latitude, String longitude, double height, ArrayList<String> multimedia) {
         this.hasBeenChecked = hasBeenChecked;
         this.isVisitedChecked = isVisitedChecked;
         this.id = id;
         this.name = name;
+        this.description = description;
         this.latitude = latitude;
         this.longitude = longitude;
         this.height = height;
@@ -109,5 +112,13 @@ public class Waypoint {
     public void setMultimedia(ArrayList<String> multimedia)
     {
         this.multimedia = multimedia;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
     }
 }

@@ -9,6 +9,7 @@ import android.location.Location;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
@@ -51,9 +52,10 @@ import LogicTier.RouteManager.RouteManager;
 import PresentationTier.Fragments.LegendaFragment;
 import PresentationTier.Fragments.RoutesFragment;
 import PresentationTier.Fragments.Setting.Settings;
+import PresentationTier.Fragments.WaypointInfoFragment;
 import PresentationTier.Fragments.WaypointPopup;
 
-public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, OnRouteCallback {
+public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, OnRouteCallback, GoogleMap.OnMarkerClickListener {
     private static final String TAG = "MapsActivity";
     private GoogleMap mMap;
 
@@ -112,13 +114,13 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         // this.initialRoute = new Route(routeReader.ReadWaypointsFromDatabase());
 
         ArrayList<Waypoint> wp = new ArrayList<Waypoint>();
-        wp.add(new Waypoint(false, false, "VVV", "51.588762", "4.776913", 0, null));
-        wp.add(new Waypoint(false, false, "De Bruine Pij", "51.588791", "4.775477", 0, null));
-        wp.add(new Waypoint(false, false, "Corenmaet", "51.589308", "4.774484", 0, null));
-        wp.add(new Waypoint(false, false, "O'Mearas Irish Pub", "51.589448", "4.775846", 0, null));
-        wp.add(new Waypoint(false, false, "Kasteel van Breda", "51.590504", "4.776221", 0, null));
-        wp.add(new Waypoint(false, false, "Stadspark Valkenberg", "51.590613", "4.777537", 0, null));
-        wp.add(new Waypoint(false, false, "Café Publieke Werken", "51.588973", "4.778062", 0, null));
+        wp.add(new Waypoint(false, false, "VVV", "", "51.588762", "4.776913", 0, null));
+        wp.add(new Waypoint(false, false, "De Bruine Pij", "", "51.588791", "4.775477", 0, null));
+        wp.add(new Waypoint(false, false, "Corenmaet", "", "51.589308", "4.774484", 0, null));
+        wp.add(new Waypoint(false, false, "O'Mearas Irish Pub", "", "51.589448", "4.775846", 0, null));
+        wp.add(new Waypoint(false, false, "Kasteel van Breda", "", "51.590504", "4.776221", 0, null));
+        wp.add(new Waypoint(false, false, "Stadspark Valkenberg", "", "51.590613", "4.777537", 0, null));
+        wp.add(new Waypoint(false, false, "Café Publieke Werken", "", "51.588973", "4.778062", 0, null));
         this.initialRoute = new Route(wp);
 
 
@@ -276,10 +278,6 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         });
     }
 
-    private void addClickListenerForWaypoints() {
-        //TODO
-    }
-
     private void loadLegend() {
         //Legenda inladen
         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
@@ -336,6 +334,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void onMapReady(GoogleMap googleMap) {
         mMap = googleMap;
 
+        googleMap.setOnMarkerClickListener(this);
+
         if(!this.settings.isColorBlindmode()) {
             mMap.setMapType(GoogleMap.MAP_TYPE_NORMAL);
         }
@@ -350,7 +350,8 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             Waypoint currWaypoint = this.initialRoute.getRoute().get(i);
 
             LatLng waypointMarker = new LatLng(Double.parseDouble(currWaypoint.getLatitude()), Double.parseDouble(currWaypoint.getLongitude()));
-            googleMap.addMarker(new MarkerOptions().position(waypointMarker).title(currWaypoint.getName()));
+
+            googleMap.addMarker(new MarkerOptions().position(waypointMarker).title(currWaypoint.getName())).setTag(currWaypoint);
             googleMap.addCircle(new CircleOptions().center(waypointMarker).radius(10).strokeColor(Color.RED).strokeWidth(2.0f));
 
             if (i + 1 != this.initialRoute.getRoute().size()) {
@@ -414,5 +415,22 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
             this.gpsManager.buildGoogleApiClient();
             mMap.setMyLocationEnabled(true);
         }
+    }
+
+    @Override
+    public boolean onMarkerClick(Marker marker) {
+
+        Waypoint waypoint = (Waypoint)marker.getTag();
+
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        Fragment fragment = new WaypointInfoFragment();
+
+        Bundle bundle = new Bundle();
+        bundle.putSerializable("waypoint", waypoint);
+
+        fragment.setArguments(bundle);
+        ft.replace(R.id.map, fragment);
+        ft.commit();
+        return true;
     }
 }

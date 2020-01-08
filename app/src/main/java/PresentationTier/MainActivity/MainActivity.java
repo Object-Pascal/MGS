@@ -15,14 +15,14 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        DatabaseManager databaseManager = new DatabaseManager(this);
+/*        DatabaseManager databaseManager = new DatabaseManager(this);
 
         databaseManager.insertWaypointIntoDB(new Waypoint(false, false, "VVV", "51.588762", "4.776913", 0, null));
         databaseManager.insertWaypointIntoDB(new Waypoint(false, false, "De Bruine Pij", "51.588791", "4.775477", 0, null));
         databaseManager.insertWaypointIntoDB(new Waypoint(false, false, "Corenmaet", "51.589308", "4.774484", 0, null));
         databaseManager.insertWaypointIntoDB(new Waypoint(false, false, "OMearas Irish Pub", "51.589448", "4.775846", 0, null));
         databaseManager.insertWaypointIntoDB(new Waypoint(false, false, "Kasteel van Breda", "51.590504", "4.776221", 0, null));
-        databaseManager.insertWaypointIntoDB(new Waypoint(false, false, "Café Publieke Werken", "51.588973", "4.778062", 0, null));
+        databaseManager.insertWaypointIntoDB(new Waypoint(false, false, "Café Publieke Werken", "51.588973", "4.778062", 0, null));*/
 
         Intent mapsIntent = new Intent(this, MapsActivity.class);
         startActivity(mapsIntent);

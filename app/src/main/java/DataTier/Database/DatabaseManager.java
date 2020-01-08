@@ -209,7 +209,7 @@ public class DatabaseManager extends SQLiteOpenHelper {
                     visitedIsChecked = true;
                 }
 
-                waypoints.add(new Waypoint(hasBeenVisited, visitedIsChecked, id, name,
+                waypoints.add(new Waypoint(hasBeenVisited, visitedIsChecked, id, name, "",
                         latitude, longitude, Double.parseDouble(height), null));
             }
         }
