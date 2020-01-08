@@ -1,6 +1,8 @@
 package PresentationTier.Fragments;
 
 import android.os.Bundle;
+import android.support.annotation.Nullable;
+import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -25,6 +27,16 @@ public class WaypointPopup extends PopUpFragment {
     private Button btn_OK;
 
     @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+
+        Bundle args = getArguments();
+
+        waypoint = (Waypoint)args.getSerializable("Waypoint");
+        this.name = waypoint.getName();
+    }
+
+    @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState) {
         // Defines the xml file for the fragment
         return inflater.inflate(R.layout.popup_fragment, parent, false);
@@ -39,14 +51,15 @@ public class WaypointPopup extends PopUpFragment {
         this.txt_Information = (TextView) view.findViewById(R.id.txt_information);
         this.btn_OK = (Button) view.findViewById(R.id.btn_ok);
 
-        ShowPopUpFragment(getString(R.string.popUpFragment_Information));
-
+        final Fragment f = this;
         this.btn_OK.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                getActivity().onBackPressed();
+                getActivity().getSupportFragmentManager().beginTransaction().remove(f).commit();
             }
         });
+
+        ShowPopUpFragment(getString(R.string.popUpFragment_Information));
     }
 
     @Override

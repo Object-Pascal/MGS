@@ -427,9 +427,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
                     if (closestWaypoint != null) {
                         FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
                         WaypointPopup waypointPopup = new WaypointPopup();
-                        ft.replace(R.id.legendFrame, waypointPopup);
+                        Bundle bundle = new Bundle();
+                        bundle.putSerializable("Waypoint", closestWaypoint);
+                        waypointPopup.setArguments(bundle);
+                        ft.replace(R.id.map, waypointPopup);
                         ft.commit();
-                        waypointPopup.ShowPopUpFragment(closestWaypoint.getName());
                     }
                 }
             }
