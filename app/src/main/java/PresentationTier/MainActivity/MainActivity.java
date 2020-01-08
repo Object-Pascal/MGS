@@ -35,8 +35,9 @@ public class MainActivity extends AppCompatActivity {
         ArrayList<Waypoint> wp = new ArrayList<Waypoint>();
         ArrayList<String> images = new ArrayList<>();
         images.add("https://vvvbreda.nl/content/uploads/2019/03/IMG_20190328_121002.jpg");
-        wp.add(new Waypoint(false, false, "VVV", "Dit fraaie stadspark verbindt het station van Breda met de binnenstad.\n" +
-                "\n" +
+        wp.add(new Waypoint(false, false, "VVV", "Dit fraaie stadspark verbindt het station van Breda met de binnenstad." +
+                "" +
+                "" +
                 "Tot 1812 deed het Valkenberg dienst als kasteeltuin voor de Heren van Breda. Het dankt zijn naam aan een valkenhuis dat aan de rand stond en van waaruit de kasteelbewoners en hun gasten de valkenjacht bedreven.", "51.588762", "4.776913", 0, images));
         images = new ArrayList<>();
         images.add("https://media-cdn.tripadvisor.com/media/photo-s/15/a4/74/91/buiten-kant.jpg");
