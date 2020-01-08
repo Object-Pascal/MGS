@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">GaanPlaatsStaan</string>
+    <string name="error">Error</string>
+    <string name="explanation">Explenation</string>
+    <string name="popUpFragment_Information">U are currently 10 meters away from the waypoint</string>
+    <string name="save">Save</string>
+    <string name="txtCircleExplan">Map is responding or not</string>
+    <string name="txtColorBlind">Colorblind</string>
+    <string name="txtExplainationApp">When the map has been opened you will notice a few icons in the upper right corner. The colored icon - which is either blue or red - defines whether an issue has been occured, respectively. The icon underneath displays the legenda. The last icon \"map\" can change the display option to standard- or satelliteview.   By clicking on a marker more information about a specific waypoint can be displayed. If present a photo and text are shown.  By swiping up from the bottom-bezel a route can be selected.</string>
+    <string name="txtMapExplain">Changes the look of the map</string>
+    <string name="txtMapYouExplain">Where are u currently?</string>
+    <string name="txtSettingsExplain">Opens settings page</string>
+    <string name="txtWaypointExplain">Waypoint icon, press for more information</string>
+</resources>

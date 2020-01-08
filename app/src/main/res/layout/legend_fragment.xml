@@ -73,7 +73,7 @@
         app:layout_constraintHorizontal_bias="0.6"
         app:layout_constraintStart_toStartOf="@+id/guideline12"
         app:layout_constraintTop_toTopOf="@+id/guideline14"
-        android:src="@drawable/circle" />
+        android:src="@drawable/circle_good" />
 
     <TextView
         android:id="@+id/lblCircleExplan"

@@ -7,16 +7,22 @@ import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
 import android.os.Build;
-import android.provider.ContactsContract;
-import android.support.v4.app.ActivityCompat;
+import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.v4.app.FragmentActivity;
 import android.os.Bundle;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
+import android.widget.ListView;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationResult;
@@ -43,10 +49,12 @@ import LogicTier.RouteManager.Route.RouteReader;
 import LogicTier.RouteManager.Route.Waypoint;
 import LogicTier.RouteManager.RouteManager;
 import PresentationTier.Fragments.LegendaFragment;
+import PresentationTier.Fragments.RoutesFragment;
 import PresentationTier.Fragments.Setting.Settings;
 import PresentationTier.Fragments.WaypointPopup;
 
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback, OnRouteCallback {
+    private static final String TAG = "MapsActivity";
     private GoogleMap mMap;
 
     private GPSManager gpsManager;
@@ -55,13 +63,23 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
     private ArrayList<Polyline> routeLines;
     private RouteManager routeManager;
-
+    private boolean isPaused = false;
     private DatabaseManager databaseManager;
     private Settings settings;
     private RouteReader routeReader;
     private Route initialRoute;
+    private Route exampleRoute2;
     private boolean legendaVisible;
+    private boolean routesVisable;
     private boolean mapSwitch;
+    private SupportMapFragment mapFragment;
+
+    private ArrayList<Route> routes = new ArrayList<>();
+    private ArrayAdapter<Route> adapter;
+    private ArrayAdapter<Waypoint> adapterForWaypoints;
+    private ArrayList<Waypoint> waypointsToDisplay = new ArrayList<>();
+    private ListView routesListView;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,11 +88,16 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
 
         initDefaultValues();
         loadLegend();
+        loadRoutes();
         readRouteFromDatabase();
         readSettingsFromDatabase();
 
-        SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
+        routes.add(initialRoute);
+        routes.add(exampleRoute2);
+
+        mapFragment = (SupportMapFragment) getSupportFragmentManager().findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
+        //setErrorImg(true);
     }
 
     private void initDefaultValues() {
@@ -97,11 +120,164 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
         wp.add(new Waypoint(false, false, "Stadspark Valkenberg", "51.590613", "4.777537", 0, null));
         wp.add(new Waypoint(false, false, "Café Publieke Werken", "51.588973", "4.778062", 0, null));
         this.initialRoute = new Route(wp);
+
+
+        //ROUTE 2
+        /*DatabaseManager databaseManager = new DatabaseManager(this);
+        databaseManager.insertWaypointIntoDB(new Waypoint(false, false, "VVV", "51.588762", "4.776913", 0, null));
+        databaseManager.insertWaypointIntoDB(new Waypoint(false, false, "Grote Kerk Breda", "51.588770", "4.775376", 0, null));
+        databaseManager.insertWaypointIntoDB(new Waypoint(false, false, "Kippie Breda", "51.588271", "4.775229", 0, null));
+
+        Waypoint vvv = new Waypoint(false, false, "VVV", "51.588762", "4.776913", 0, null);
+        Waypoint avans = new Waypoint(false, false, "Avans Lovensdijkstraat", "51.585665", "4.792003",0, null);
+        Waypoint universityOfAppliedSciences = new Waypoint(false, false, "B U O A S", "51.590784", "4.795631", 0 , null);
+        Waypoint hogeSchoollaan = new Waypoint(false, false, "Avans Hogeschoollaan", "51.584095", "4.797019", 0, null);
+
+        ArrayList<Waypoint> waypoints = new ArrayList<>();
+        waypoints.add(vvv);
+        waypoints.add(avans);
+        waypoints.add(universityOfAppliedSciences);
+        waypoints.add(hogeSchoollaan);
+
+        exampleRoute2 = new Route(waypoints);
+        exampleRoute2.title = "Scholen tour";
+        exampleRoute2.image = getDrawable(R.drawable.avans);
+
+        this.initialRoute = new Route(routeReader.ReadWaypointsFromDatabase());
+        this.initialRoute.title = "VVV route";
+        this.initialRoute.image = getDrawable(R.drawable.bredastad);*/
     }
 
     private void readSettingsFromDatabase() {
         databaseManager = new DatabaseManager(this);
         this.settings = databaseManager.getSettingsFromDB();
+    }
+
+    private void loadRoutes() {
+        //Routes inladen
+        FragmentTransaction ft = getSupportFragmentManager().beginTransaction();
+        RoutesFragment routesFragment = new RoutesFragment();
+        ft.replace(R.id.routeFrame, routesFragment);
+        ft.commit();
+
+        //Onzichtbaar maken
+        FrameLayout frameLayout = findViewById(R.id.routeFrame);
+        frameLayout.setVisibility(View.INVISIBLE);
+
+        //Onclick
+        ImageView routeButton = (ImageView) findViewById(R.id.imgRoutes);
+        routeButton.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                final FrameLayout frameLayout = findViewById(R.id.routeFrame);
+                frameLayout.setVisibility(routesVisable ? View.INVISIBLE : View.VISIBLE);
+                routesVisable = !routesVisable;
+                final ImageView bottomButton = (ImageView) findViewById(R.id.imgRoutes);
+                bottomButton.setVisibility(View.INVISIBLE);
+                ImageView topButton = (ImageView) findViewById(R.id.img_pullup);
+                topButton.setOnClickListener(new View.OnClickListener()
+                {
+                    @Override
+                    public void onClick(View v)
+                    {
+                        frameLayout.setVisibility(routesVisable ? View.INVISIBLE : View.VISIBLE);
+                        routesVisable = !routesVisable;
+                        bottomButton.setVisibility(View.VISIBLE);
+                    }
+                });
+                routeMenu();
+                loadRouteListView();
+
+            }
+        });
+    }
+
+    private void routeMenu() {
+        Log.i(TAG, "routeMenu: Clicked");
+        final ImageView playPause = (ImageView)(findViewById(R.id.img_pauseplay));
+        playPause.setOnClickListener(new View.OnClickListener()
+        {
+            @Override
+            public void onClick(View v)
+            {
+                playPause.setImageResource(isPaused ? android.R.drawable.ic_media_pause : android.R.drawable.ic_media_play);
+                isPaused=!isPaused;
+            }
+        });
+        final ImageView stop = (ImageView)findViewById(R.id.img_stop);
+        stop.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(),"Gestopt met app", Toast.LENGTH_LONG).show();
+                finish();
+            }
+        });
+        final ImageView restart = (ImageView)findViewById(R.id.img_again);
+        restart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Toast.makeText(getApplicationContext(), "Je route begint nu opnieuw", Toast.LENGTH_LONG).show();
+            }
+        });
+    }
+
+    private void loadRouteListView() {
+        routesListView = (ListView) findViewById(R.id.routes_list);
+        adapter = new ArrayAdapter<Route>(getApplicationContext(), R.layout.part_route, routes) {
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                if (convertView == null)
+                    convertView = getLayoutInflater().inflate(R.layout.part_route, null);
+                ImageView appIcon = (ImageView) convertView.findViewById(R.id.part_route_iv_icon);
+                appIcon.setImageDrawable(routes.get(position).image);
+                ImageView background = (ImageView) convertView.findViewById(R.id.part_route_iv_background);
+                int number = (int)(Math.random()*3);
+                background.setImageDrawable(getDrawable(number==0 ? android.R.color.holo_orange_light : number==1 ?  android.R.color.holo_green_dark : number==2 ? android.R.color.holo_red_dark : number==3 ? android.R.color.holo_purple : android.R.color.holo_green_light));
+                TextView title = (TextView) convertView.findViewById(R.id.part_route_tv_title);
+                title.setText(routes.get(position).title);
+                return convertView;
+            }
+        };
+        routesListView.setAdapter(adapter);
+        addClickListenerForRoutes();
+    }
+
+    private void loadWaypointListView(final ArrayList<Waypoint> waypoints) {
+        routesListView = (ListView) findViewById(R.id.routes_list);
+        adapterForWaypoints = new ArrayAdapter<Waypoint>(getApplicationContext(), R.layout.part_waypoint, waypoints) {
+            @NonNull
+            @Override
+            public View getView(int position, @Nullable View convertView, @NonNull ViewGroup parent) {
+                if (convertView==null)convertView= getLayoutInflater().inflate(R.layout.part_waypoint, null);
+                ImageView appIcon = (ImageView) convertView.findViewById(R.id.part_waypoint_iv_icon4);
+                int number = (int)(Math.random()*3);
+                appIcon.setImageDrawable(getDrawable(number==0 ? R.drawable.bredastad : number==1 ?  android.R.color.holo_green_dark : number==2 ? R.drawable.avans : number==3 ? android.R.color.holo_purple : R.drawable.circle_good));
+                ImageView background = (ImageView) convertView.findViewById(R.id.part_waypoint_iv_background4);
+                number = (int)(Math.random()*3);
+                background.setImageDrawable(getDrawable(number==0 ? android.R.color.holo_orange_light : number==1 ?  android.R.color.holo_green_dark : number==2 ? android.R.color.holo_red_dark : number==3 ? android.R.color.holo_purple : android.R.color.holo_green_light));
+                TextView title = (TextView) convertView.findViewById(R.id.part_waypoint_tv_title4);
+                title.setText(waypoints.get(position).getName());
+                return convertView;
+            }
+        };
+        routesListView.setAdapter(adapterForWaypoints);
+    }
+
+    private void addClickListenerForRoutes() {
+        routesListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                // fill with waypoints instead of routes.
+                loadWaypointListView(exampleRoute2.getRoute());
+            }
+        });
+    }
+
+    private void addClickListenerForWaypoints() {
+        //TODO
     }
 
     private void loadLegend() {
@@ -200,6 +376,11 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     public void OnRouteLoaded(PolylineOptions options, LatLngBounds bounds, int padding) {
         routeLines.add(mMap.addPolyline(options));
         mMap.animateCamera(CameraUpdateFactory.newLatLngBounds(bounds, padding));
+    }
+
+    public void setErrorImg(boolean hasError) {
+        ImageView errorImg = (ImageView) findViewById(R.id.imgWorking);
+        errorImg.setImageResource(hasError ? R.drawable.circle_bad : R.drawable.circle_good);
     }
 
     private void initializeUserConnection() {
